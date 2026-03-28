@@ -24,13 +24,31 @@ app.listen(port, () => {
 app.get("/",(req, res) => {
     res.send("you conntacted rooth path ");
 });
-app.get("/apple",(req, res) => {
-    res.send("you conntacted apple     path ");
-});
-app.get("/mango",(req, res) => {
-    res.send("you conntacted mangopath ");
-});
-app.use((req,  res) => {
-    res.status(404).send("this path does not exit");
-});
+// app.get("/apple",(req, res) => {
+//     res.send("you conntacted apple     path ");
+// });
+// app.get("/mango",(req, res) => {
+//     res.send("you conntacted mangopath ");
+// });
+// app.use((req,  res) => {
+//     res.status(404).send("this path does not exit");
+// });
  
+app.get("/:username/:id", (req, res) => {
+    console.log(req.params);
+    let {username, id} = req.params;
+    let htmlStr = `<h1>Welcome ${username}</h1>`
+    res.send(htmlStr);
+});      
+
+
+app.get("/search",(req,res) => {
+    // console.log(req.query);
+    // res.send(" not found ");
+
+    let {q} = req.query;
+    if(!q) {
+        res.send("<h1>not found</h1>");
+    }
+     res.send(`<h1>these are the search results:${q}</h1>`);
+});
