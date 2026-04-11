@@ -30,7 +30,7 @@
     constructor(name) {
          super(name);
     }
-
+   
     meow() {
         console.log("woof..");
     }
