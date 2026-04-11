@@ -1,5 +1,11 @@
 const { faker } = require('@faker-js/faker');
 const mysql = require('mysql2');
+const express = require("express");
+const app = express();
+const path = require("path");
+
+app.set("view  engine", "ejs");
+app.set("views", path.join(__dirname,"/views"));
 
 const connection = mysql.createConnection ({
   host:'localhost',
@@ -19,13 +25,13 @@ let getRandomUser = () => {
 };
 
 
+// //INSERTING NEW DATA
+// let q = "INSERT INTO user (id, username, email, password) VALUES ?";
 
-let q = "INSERT INTO user (id, username, email, password) VALUES ?";
-
-let data = [];
-for (let i=1; i<=100; i++) {
-  data.push(getRandomUser());
-}
+// let data = [];
+// for (let i=1; i<=100; i++) { 
+//   data.push(getRandomUser());
+// }
 
 // let users = [
 //           ["123a","123_newusera","abca@gmail.com","abca"],
@@ -37,22 +43,75 @@ for (let i=1; i<=100; i++) {
 
 
 //CONNECTION PART
+// try {
+//   connection.query(q, [data], (err, result) => {
+//  if (err) throw err;
+//   console.log(result);
+//   // console.log(result.length)
+//   // console.log(result[0]);
+//   // console.log(result[1]);
+// });
+// } catch (err) {
+//   console.log(err);
+// }
+
+
+// connection.end();
+
+////////////HOME ROUTE //////////////////
+app.get("/",(req,res) => {
+  let q = `SELECT count(*) FROM user`;
+  //CONNECTION PART
 try {
-  connection.query(q, [data], (err, result) => {
+  connection.query(q, (err, result) => {
  if (err) throw err;
-  console.log(result);
+  let count = result[0]["count(*)"];
+  // console.log(result[0]["count(*)"]);
+  res.render("home.ejs",{ count }); 
   // console.log(result.length)
   // console.log(result[0]);
   // console.log(result[1]);
 });
 } catch (err) {
   console.log(err);
+  res.send("some error in DB");
 }
 
+})
 
-connection.end();
+///////////////SHOW ROUTE /////////////////////
+app.get("/user", (req,res) => {
+  //res.send("sucess");
+  let q =`SELECT * FROM user`;
+try {
+  connection.query(q, (err, users) => {
+ if (err) throw err;
+  //console.log(result);
+  res.render("showuser.ejs", { users });
+  // console.log(result[0]["count(*)"]);
+  // res.send(result); 
+  // console.log(result.length)
+  // console.log(result[0]);
+  // console.log(result[1]);
+});
+} catch (err) {
+  console.log(err);
+  res.send("some error in DB");
+}
+
+});
    
+///////////////EDIT ROUTE////////////////////////
+ app.get("/user/:id/edit",(req,res) => {
+  let { id } = req.params;
+  console.log(id);
+res.render("edit.ejs");
+ });
 
+
+app.listen("3030", () => {
+  console.log("server is listening to port 3030");
+});
 
 
 
