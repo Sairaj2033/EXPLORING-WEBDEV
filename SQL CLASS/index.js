@@ -154,7 +154,7 @@ if(formpass != user.password) {
 });
 ///////////////// HOMEWORK CREATE A NEW USER ////////////
 app.get("/user/new",(req,res) => {
-  res.render("create.ejs")
+  res.render("create.ejs");
 });
 app.post("/user",(req,res)=> {
   let {username,email,password} =req.body;
